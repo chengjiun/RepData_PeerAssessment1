@@ -45,11 +45,12 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
 
     - the mean and median of the number of steps per day are 9354.2295 and 10395 respectively.
-    - show the histogram of the StepsPerDay.
+    - show the histogram of the StepsPerDay. Note that the frequency is high at the very first bin because of the entries with NA.
+    
 
 ```r
     with(StepsPerDay, {
-         plot(date,steps,type='S',col='red')
+         hist(steps,col='red',breaks=10)
          meanStep = mean(steps,na.rm=TRUE)
          medianStep=median(steps, na.rm=TRUE)
     })
@@ -66,7 +67,7 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
     - The maximum steps and its corresponding interval are 206.1698 and 835 respectively.
 
-    - show the histogram of steps per interval.
+    - show the time series of steps per 5-mins interval.
 
 ```r
     StepsPerInterval <- ddply(data,.(interval),summarize,steps=mean(steps,na.rm=TRUE))
@@ -89,7 +90,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
 ## [1] 2304
 ```
-    - Replace the NA using the mean steps within each interval calculated in Step 3. And, create a new dataset (dataNaFilledByIntMean) that is equal to the original dataset but with the missing data filled in. 
+    - Replace the NA using the mean steps within each interval calculated in Step 3. 
+    In details, I first identified the interval of each NAs (intervalNA), and their "index" in the original dataframe. Then, I used sapply to find out the average steps of each entry of intervalNA from the dataframe, StepsPerInterval. Finally, the NA is replaced by the average steps per interval accordingly, and the missing value filled-in data is stored in the new dataframe, dataNaFilledByIntMean.
     
 
 ```r
@@ -105,7 +107,7 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```r
     StepsPerDayNaFilled <- ddply(dataNaFilledByIntMean,.(date),summarize,steps=sum(steps))
     with(StepsPerDayNaFilled, {
-         plot(date,steps,type='S',col='red')
+         hist(steps,breaks=10,col='red')
          meanStepsPerDayNaFilled<-mean(steps,na.rm=TRUE)
          medianStepsPerDayNaFilled<-median(steps,na.rm=TRUE)
     })
