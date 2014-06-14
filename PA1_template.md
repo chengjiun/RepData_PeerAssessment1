@@ -4,7 +4,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
     I will first download the data, unzip the file, and read into R using read.csv(). 
     The data includes three columns: steps, date, and interval, and 15840 rows in total. Format the date properly for later use.  
     
-```{r}
+
+```r
     library(plyr)
     library(ggplot2)
     library(lattice)
@@ -16,16 +17,29 @@ Course 5 (reproducible research) -- Peer Assignment 1
     summary(data)
 ```
 
+```
+##      steps            date               interval   
+##  Min.   :  0.0   Min.   :2012-10-01   Min.   :   0  
+##  1st Qu.:  0.0   1st Qu.:2012-10-16   1st Qu.: 589  
+##  Median :  0.0   Median :2012-10-31   Median :1178  
+##  Mean   : 37.4   Mean   :2012-10-31   Mean   :1178  
+##  3rd Qu.: 12.0   3rd Qu.:2012-11-15   3rd Qu.:1766  
+##  Max.   :806.0   Max.   :2012-11-30   Max.   :2355  
+##  NA's   :2304
+```
+
 ## 2. What is mean total number of steps taken per day?
     - count the steps per day by ddply in plyr package, and save the result as StepsPerDay. Here, I just ignored the NA by setting na.rm=TRUE. 
 
-```{r} 
+
+```r
         StepsPerDay <- ddply(data,.(date),summarize,steps=sum(steps,na.rm=TRUE))
 ```
 
-    - the mean and median of the number of steps per day are `r mean(StepsPerDay$steps,na.rm=TRUE)` and `r median(StepsPerDay$steps,na.rm=TRUE)` respectively.
+    - the mean and median of the number of steps per day are 9354.2295 and 10395 respectively.
     - show the histogram of the StepsPerDay.
-```{r}
+
+```r
     with(StepsPerDay, {
          plot(date,steps,type='S',col='red')
          meanStep = mean(steps,na.rm=TRUE)
@@ -33,16 +47,20 @@ Course 5 (reproducible research) -- Peer Assignment 1
     })
 ```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
 
 ## 3. What is the average daily activity pattern?
     - similar to Step 2, count the steps of each interval using ddply and save the result to StepsPerInterval.
-```{r}
+
+```r
     StepsPerInterval <- ddply(data,.(interval),summarize,steps=mean(steps,na.rm=TRUE))
 ```
-    - The maximum steps and its corresponding interval are `r max(StepsPerInterval$steps,na.rm=TRUE)` and `r StepsPerInterval$interval[which.max(StepsPerInterval$steps)]` respectively.
+    - The maximum steps and its corresponding interval are 206.1698 and 835 respectively.
 
     - show the histogram of steps per interval.
-```{r}
+
+```r
     StepsPerInterval <- ddply(data,.(interval),summarize,steps=mean(steps,na.rm=TRUE))
     with(StepsPerInterval, {
         plot(interval,steps,type='l',col='red')
@@ -51,14 +69,22 @@ Course 5 (reproducible research) -- Peer Assignment 1
     })
 ```
 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+
 ## 4. Inputing missing values:
     - Count the missing value in the table.
-```{r}
+
+```r
     sum(is.na(data))
+```
+
+```
+## [1] 2304
 ```
     - Replace the NA using the mean steps within each interval calculated in Step 3. And, create a new dataset (dataNaFilledByIntMean) that is equal to the original dataset but with the missing data filled in. 
     
-```{r}
+
+```r
     dataNaFilledByIntMean <- data
     index<-which(is.na(data$steps))
     intervalNA<-data$interval[index]
@@ -67,7 +93,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
 
     - Repeat step 2 to make a histogram of the total number of steps taken each day, and report the mean and median total number of steps taken per day. 
-```{r}
+
+```r
     StepsPerDayNaFilled <- ddply(dataNaFilledByIntMean,.(date),summarize,steps=sum(steps))
     with(StepsPerDayNaFilled, {
          plot(date,steps,type='S',col='red')
@@ -76,11 +103,14 @@ Course 5 (reproducible research) -- Peer Assignment 1
     })
 ```
 
-    - The median and mean value are `r mean(StepsPerDayNaFilled$steps,na.rm=TRUE)` and `r median(StepsPerDayNaFilled$steps,na.rm=TRUE)` respectively. They are larger than the values in step 2, since the filled in values are always non-negative. However, both of the value equal to the filled-in average steps per day, so that they are not as informatic. 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+    - The median and mean value are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup> respectively. They are larger than the values in step 2, since the filled in values are always non-negative. However, both of the value equal to the filled-in average steps per day, so that they are not as informatic. 
 
 ## 5. Are there differences in activity patterns between weekdays and weekends?
     - Add a column to the filled in data for the label of the weekday or weekend. 
-```{r}
+
+```r
     weekdays <- weekdays(dataNaFilledByIntMean$date)
     weekdays[weekdays == 'Sunday' | weekdays == 'Saturday'] = 'weekends'
     weekdays[weekdays != 'weekends'] = 'weekdays'
@@ -89,15 +119,23 @@ Course 5 (reproducible research) -- Peer Assignment 1
 
     - calculate the average steps of each interval for the two levels of "weekdays" respectively.
     
-```{r}
+
+```r
     StepsPerIntervalNaFilled <- ddply(dataNaFilledByIntMean,.(weekdays,interval),summarize,steps=mean(steps,na.rm=TRUE))
 ```
 
     - plot the histogram of the steps on weekday and weekend. I first used ggplot, and found it doesn't quite match the reference plot. Therefore, I do it again with lattice. Both of the plots are shown. 
     
-```{r}
-    ggplot(data=StepsPerIntervalNaFilled, aes(x=interval, y=steps,color=weekdays))+geom_line() + ylab('number of steps')
 
+```r
+    ggplot(data=StepsPerIntervalNaFilled, aes(x=interval, y=steps,color=weekdays))+geom_line() + ylab('number of steps')
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-111.png) 
+
+```r
     xyplot(steps ~ interval | weekdays, data=StepsPerIntervalNaFilled, layout=c(1,2),type='l',ylab='number of steps')
 ```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-112.png) 
 
