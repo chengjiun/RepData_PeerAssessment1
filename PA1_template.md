@@ -110,10 +110,15 @@ Course 5 (reproducible research) -- Peer Assignment 1
          hist(steps,breaks=10,col='red')
          meanStepsPerDayNaFilled<-mean(steps,na.rm=TRUE)
          medianStepsPerDayNaFilled<-median(steps,na.rm=TRUE)
+         print(c(meanStepsPerDayNaFilled,medianStepsPerDayNaFilled))
     })
 ```
 
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+```
+## [1] 10766 10766
+```
 
     - The median and mean value are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup> respectively. They are larger than the values in step 2, since the filled in values are always non-negative. However, both of the value equal to the filled-in average steps per day, so that they are not as informatic. 
 

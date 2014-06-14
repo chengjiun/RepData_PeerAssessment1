@@ -76,6 +76,7 @@ Course 5 (reproducible research) -- Peer Assignment 1
          hist(steps,breaks=10,col='red')
          meanStepsPerDayNaFilled<-mean(steps,na.rm=TRUE)
          medianStepsPerDayNaFilled<-median(steps,na.rm=TRUE)
+         print(c(meanStepsPerDayNaFilled,medianStepsPerDayNaFilled))
     })
 ```
 
