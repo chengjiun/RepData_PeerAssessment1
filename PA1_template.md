@@ -2,7 +2,7 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ========================================================
 ## 1. Loading the data: 
     I will first download the data, unzip the file, and read into R using read.csv(). 
-    The data includes three columns: steps, date, and interval, and 15840 rows in total. Format the date properly for later use.  
+    The data includes three columns: steps, date, and interval, and 15840 rows in total. Format the date properly for later use.  Note that the timezone is set to avoid confussion. 
     
 
 ```r
@@ -13,6 +13,14 @@ Course 5 (reproducible research) -- Peer Assignment 1
     url = "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
     download.file(url,destfile='activity.zip',method='curl')
     data<-read.csv(unzip('activity.zip'))
+    Sys.setlocale("LC_TIME", "en_US.UTF-8")
+```
+
+```
+## [1] "en_US.UTF-8"
+```
+
+```r
     data$date<- as.Date(data$date)
     summary(data)
 ```
@@ -125,6 +133,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
 
     - plot the histogram of the steps on weekday and weekend. I first used ggplot, and found it doesn't quite match the reference plot. Therefore, I do it again with lattice. Both of the plots are shown. 
+    - The answer is YES. The activity pattern of weekday and weekend are different. The activity of weekday is high in the morning before going to work. On the other hand, the activity increases in the afternoon of weekends. 
+    
     
 
 ```r
