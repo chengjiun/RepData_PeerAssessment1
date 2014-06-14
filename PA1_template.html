@@ -184,7 +184,8 @@ hljs.initHighlightingOnLoad();
 <h2>1. Loading the data:</h2>
 
 <pre><code>I will first download the data, unzip the file, and read into R using read.csv(). 
-The data includes three columns: steps, date, and interval, and 15840 rows in total. Format the date properly for later use.  Note that the timezone is set to avoid confussion. 
+The data includes three columns: steps, date, and interval, and 15840 rows in total. 
+Format the date properly for later use.  Note that the timezone is set to avoid confussion. 
 </code></pre>
 
 <pre><code class="r">    library(plyr)
@@ -216,14 +217,16 @@ The data includes three columns: steps, date, and interval, and 15840 rows in to
 
 <h2>2. What is mean total number of steps taken per day?</h2>
 
-<pre><code>- count the steps per day by ddply in plyr package, and save the result as StepsPerDay. Here, I just ignored the NA by setting na.rm=TRUE. 
+<pre><code>- count the steps per day by ddply in plyr package, and save the result as StepsPerDay. 
+Here, I just ignored the NA by setting na.rm=TRUE. 
 </code></pre>
 
 <pre><code class="r">        StepsPerDay &lt;- ddply(data,.(date),summarize,steps=sum(steps,na.rm=TRUE))
 </code></pre>
 
 <pre><code>- the mean and median of the number of steps per day are 9354.2295 and 10395 respectively.
-- show the histogram of the StepsPerDay. Note that the frequency is high at the very first bin because of the entries with NA.
+- show the histogram of the StepsPerDay. 
+Note that the frequency is high at the very first bin because of the entries with NA.
 </code></pre>
 
 <pre><code class="r">    with(StepsPerDay, {
@@ -270,7 +273,11 @@ The data includes three columns: steps, date, and interval, and 15840 rows in to
 </code></pre>
 
 <pre><code>- Replace the NA using the mean steps within each interval calculated in Step 3. 
-In details, I first identified the interval of each NAs (intervalNA), and their &quot;index&quot; in the original dataframe. Then, I used sapply to find out the average steps of each entry of intervalNA from the dataframe, StepsPerInterval. Finally, the NA is replaced by the average steps per interval accordingly, and the missing value filled-in data is stored in the new dataframe, dataNaFilledByIntMean.
+In details, I first identified the interval of each NAs (intervalNA), and their &quot;index&quot; 
+in the original dataframe. Then, I used sapply to find out the average steps of each 
+entry of intervalNA from the dataframe, StepsPerInterval. Finally, the NA is replaced 
+by the average steps per interval accordingly, and the missing value filled-in data 
+is stored in the new dataframe, dataNaFilledByIntMean.
 </code></pre>
 
 <pre><code class="r">    dataNaFilledByIntMean &lt;- data
@@ -280,7 +287,8 @@ In details, I first identified the interval of each NAs (intervalNA), and their 
         function(x) StepsPerInterval$steps[StepsPerInterval$interval == x])
 </code></pre>
 
-<pre><code>- Repeat step 2 to make a histogram of the total number of steps taken each day, and report the mean and median total number of steps taken per day. 
+<pre><code>- Repeat step 2 to make a histogram of the total number of steps taken each day, 
+and report the mean and median total number of steps taken per day. 
 </code></pre>
 
 <pre><code class="r">    StepsPerDayNaFilled &lt;- ddply(dataNaFilledByIntMean,.(date),summarize,steps=sum(steps))
@@ -297,7 +305,10 @@ In details, I first identified the interval of each NAs (intervalNA), and their 
 <pre><code>## [1] 10766 10766
 </code></pre>
 
-<pre><code>- The median and mean value are 1.0766 &amp;times; 10&lt;sup&gt;4&lt;/sup&gt; and 1.0766 &amp;times; 10&lt;sup&gt;4&lt;/sup&gt; respectively. They are larger than the values in step 2, since the filled in values are always non-negative. However, both of the value equal to the filled-in average steps per day, so that they are not as informatic. 
+<pre><code>- The median and mean value are 1.0766 &amp;times; 10&lt;sup&gt;4&lt;/sup&gt; and 1.0766 &amp;times; 10&lt;sup&gt;4&lt;/sup&gt; respectively. 
+They are larger than the values in step 2, since the filled in values are always 
+non-negative. However, both of the value equal to the filled-in average steps 
+per day, so that they are not as informatic. 
 </code></pre>
 
 <h2>5. Are there differences in activity patterns between weekdays and weekends?</h2>
@@ -317,8 +328,12 @@ In details, I first identified the interval of each NAs (intervalNA), and their 
 <pre><code class="r">    StepsPerIntervalNaFilled &lt;- ddply(dataNaFilledByIntMean,.(weekdays,interval),summarize,steps=mean(steps,na.rm=TRUE))
 </code></pre>
 
-<pre><code>- plot the histogram of the steps on weekday and weekend. I first used ggplot, and found it doesn&#39;t quite match the reference plot. Therefore, I do it again with lattice. Both of the plots are shown. 
-- The answer is YES. The activity pattern of weekday and weekend are different. The activity of weekday is high in the morning before going to work. On the other hand, the activity increases in the afternoon of weekends. 
+<pre><code>- plot the histogram of the steps on weekday and weekend. I first used ggplot, 
+and found it doesn&#39;t quite match the reference plot. Therefore, I do it again with 
+lattice. Both of the plots are shown. 
+- The answer is YES. The activity pattern of weekday and weekend are different. 
+The activity of weekday is high in the morning before going to work. 
+On the other hand, the activity increases in the afternoon of weekends. 
 </code></pre>
 
 <pre><code class="r">    ggplot(data=StepsPerIntervalNaFilled, aes(x=interval, y=steps,color=weekdays))+geom_line() + ylab(&#39;number of steps&#39;)

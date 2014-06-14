@@ -2,7 +2,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ========================================================
 ## 1. Loading the data: 
     I will first download the data, unzip the file, and read into R using read.csv(). 
-    The data includes three columns: steps, date, and interval, and 15840 rows in total. Format the date properly for later use.  Note that the timezone is set to avoid confussion. 
+    The data includes three columns: steps, date, and interval, and 15840 rows in total. 
+    Format the date properly for later use.  Note that the timezone is set to avoid confussion. 
     
 
 ```r
@@ -37,7 +38,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
 
 ## 2. What is mean total number of steps taken per day?
-    - count the steps per day by ddply in plyr package, and save the result as StepsPerDay. Here, I just ignored the NA by setting na.rm=TRUE. 
+    - count the steps per day by ddply in plyr package, and save the result as StepsPerDay. 
+    Here, I just ignored the NA by setting na.rm=TRUE. 
 
 
 ```r
@@ -45,7 +47,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ```
 
     - the mean and median of the number of steps per day are 9354.2295 and 10395 respectively.
-    - show the histogram of the StepsPerDay. Note that the frequency is high at the very first bin because of the entries with NA.
+    - show the histogram of the StepsPerDay. 
+    Note that the frequency is high at the very first bin because of the entries with NA.
     
 
 ```r
@@ -91,7 +94,11 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ## [1] 2304
 ```
     - Replace the NA using the mean steps within each interval calculated in Step 3. 
-    In details, I first identified the interval of each NAs (intervalNA), and their "index" in the original dataframe. Then, I used sapply to find out the average steps of each entry of intervalNA from the dataframe, StepsPerInterval. Finally, the NA is replaced by the average steps per interval accordingly, and the missing value filled-in data is stored in the new dataframe, dataNaFilledByIntMean.
+    In details, I first identified the interval of each NAs (intervalNA), and their "index" 
+    in the original dataframe. Then, I used sapply to find out the average steps of each 
+    entry of intervalNA from the dataframe, StepsPerInterval. Finally, the NA is replaced 
+    by the average steps per interval accordingly, and the missing value filled-in data 
+    is stored in the new dataframe, dataNaFilledByIntMean.
     
 
 ```r
@@ -102,7 +109,8 @@ Course 5 (reproducible research) -- Peer Assignment 1
         function(x) StepsPerInterval$steps[StepsPerInterval$interval == x])
 ```
 
-    - Repeat step 2 to make a histogram of the total number of steps taken each day, and report the mean and median total number of steps taken per day. 
+    - Repeat step 2 to make a histogram of the total number of steps taken each day, 
+    and report the mean and median total number of steps taken per day. 
 
 ```r
     StepsPerDayNaFilled <- ddply(dataNaFilledByIntMean,.(date),summarize,steps=sum(steps))
@@ -120,7 +128,10 @@ Course 5 (reproducible research) -- Peer Assignment 1
 ## [1] 10766 10766
 ```
 
-    - The median and mean value are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup> respectively. They are larger than the values in step 2, since the filled in values are always non-negative. However, both of the value equal to the filled-in average steps per day, so that they are not as informatic. 
+    - The median and mean value are 1.0766 &times; 10<sup>4</sup> and 1.0766 &times; 10<sup>4</sup> respectively. 
+    They are larger than the values in step 2, since the filled in values are always 
+    non-negative. However, both of the value equal to the filled-in average steps 
+    per day, so that they are not as informatic. 
 
 ## 5. Are there differences in activity patterns between weekdays and weekends?
     - Add a column to the filled in data for the label of the weekday or weekend. 
@@ -139,8 +150,12 @@ Course 5 (reproducible research) -- Peer Assignment 1
     StepsPerIntervalNaFilled <- ddply(dataNaFilledByIntMean,.(weekdays,interval),summarize,steps=mean(steps,na.rm=TRUE))
 ```
 
-    - plot the histogram of the steps on weekday and weekend. I first used ggplot, and found it doesn't quite match the reference plot. Therefore, I do it again with lattice. Both of the plots are shown. 
-    - The answer is YES. The activity pattern of weekday and weekend are different. The activity of weekday is high in the morning before going to work. On the other hand, the activity increases in the afternoon of weekends. 
+    - plot the histogram of the steps on weekday and weekend. I first used ggplot, 
+    and found it doesn't quite match the reference plot. Therefore, I do it again with 
+    lattice. Both of the plots are shown. 
+    - The answer is YES. The activity pattern of weekday and weekend are different. 
+    The activity of weekday is high in the morning before going to work. 
+    On the other hand, the activity increases in the afternoon of weekends. 
     
     
 
